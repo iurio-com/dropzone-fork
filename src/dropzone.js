@@ -1411,7 +1411,13 @@ export default class Dropzone extends Emitter {
       if (this.options.uploadMultiple) {
         this.emit("sendingmultiple", files, xhr);
       }
-      this.submitRequest(xhr, null, files);
+      let transformedFiles = [];
+      for (let i = 0; i < files.length; i++) {
+        const transformedFile = new File([dataBlocks[i].data], dataBlocks[i].filename, { type: files[i].type, lastModified: files[i].lastModified });
+        transformedFile.upload = files[i].upload;
+        transformedFiles.push(transformedFile);
+      }
+      this.submitRequest(xhr, null, transformedFiles);
     } else {
       let formData = new FormData();
 
